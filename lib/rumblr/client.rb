@@ -75,7 +75,8 @@ module Rumblr
       raise(ArgumentError) unless creds
       uri = URI::HTTP.build(:path => "/api/write")
       request = Net::HTTP::Post.new(uri.request_uri, DEFAULT_HEADER)
-      request.set_form_data(creds.merge(:type => Post::TYPES.invert[post.class]).merge(post.attribute_hash))
+      type = Post::TYPES.invert[post.class.to_s.split('::').last]
+      request.set_form_data(creds.merge(:type => type).merge(post.attribute_hash))
       request_url_host = URI.parse(uri.request_uri).host
       complete_request(request)
     end
